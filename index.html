@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" type="text/css" href="./resources/css/style.css">
+    </head>
+    <body>
+        <h1>Noughts and Crosses</h1>
+        <div class="game-info">
+            <h2 id="current-player">Current Player: O</h2>
+            <h3 id="nought-score">Noughts: 0</h3>
+            <h3 id="crosses-score">Crosses: 0</h3>
+        </div>
+        <section class="game-grid">
+            <button class="slot top left"></button>
+            <button class="slot top centre"></button>
+            <button class="slot top right"></button>
+            <button class="slot middle left"></button>
+            <button class="slot middle centre"></button>
+            <button class="slot middle right"></button>       
+            <button class="slot bottom left"></button>
+            <button class="slot bottom centre"></button>
+            <button class="slot bottom right"></button>
+        </section>
+        <section class="underneath">
+            <h2 class="win" id="nought-win">Noughts Won</h2>
+            <h2 class="win" id="crosses-win">Crosses Won</h2>
+            <button class="capsule" id="play-again">Play Again</button>
+            <button class="capsule" id="reset">Reset</button>
+        </section>
+        <script src="./resources/js/game.js"></script>
+    </body>
+</html>
