@@ -85,7 +85,7 @@ button:active {
     font-size: 24px;
 }
 
-.win {
+#end-message {
     display: none;
 }
 

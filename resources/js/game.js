@@ -10,7 +10,8 @@ for (vpos of vertical) {
 }
 const buttonPlayAgain = document.getElementById('play-again');
 const buttonReset = document.getElementById('reset');
-const textCurrentPlayer = document.getElementById('current-player')
+const textCurrentPlayer = document.getElementById('current-player');
+const endMessage = document.getElementById('end-message');
 
 const createWinner = () => {
     return {
@@ -21,12 +22,11 @@ const createWinner = () => {
     }
 }
 
-const createPlayer = (symbol, name, displayWin, displayScore) => {
+const createPlayer = (symbol, name, displayScore) => {
     return {
         symbol,
         name,
         _score: 0, // Internal storage for the score
-        displayWin,
         displayScore,
 
         get score() {
@@ -39,8 +39,8 @@ const createPlayer = (symbol, name, displayWin, displayScore) => {
     }
 }
 
-const noughts = createPlayer("O", "Noughts", document.getElementById('nought-win'), document.getElementById('nought-score'));
-const crosses = createPlayer("X", "Crosses", document.getElementById('crosses-win'), document.getElementById('crosses-score'));
+const noughts = createPlayer("O", "Noughts", document.getElementById('nought-score'));
+const crosses = createPlayer("X", "Crosses", document.getElementById('crosses-score'));
 
 let currentPlayer = noughts;
 let nextPlayer = crosses;
@@ -68,7 +68,7 @@ const checkRows = arr => arr.some(row => seeIfWon(row));
 const checkColumns = arr => checkRows(transpose(arr));
 const checkDiagonals = arr => seeIfWon(mainDiagonal(arr)) || seeIfWon(secondaryDiagonal(arr))
 
-const checkWin = () => checkRows(playingGrid) || checkColumns(playingGrid) || checkDiagonals(playingGrid);
+const checkWin = arr => checkRows(arr) || checkColumns(arr) || checkDiagonals(arr);
 
 const updateCurrentPlayer = () => {
     wasPlaying = currentPlayer;
@@ -81,6 +81,7 @@ const gridDisabled = state => playingGrid.forEach(row => row.forEach(element => 
 
 const checkValidtile = tile => tile.innerHTML;
 
+const boardFull = arr => arr.every(row => row.every(element => Boolean(element.innerHTML)))
 
 
 const tileChosen = (event) => {
@@ -90,18 +91,26 @@ const tileChosen = (event) => {
 
     addSymbol(event);
 
-    if (checkWin()) {
+    if (checkWin(playingGrid)) {
         currentPlayer.score++;
-        buttonPlayAgain.style.display = 'block'
+        buttonPlayAgain.style.display = 'block';
         gridDisabled(true);
-        currentPlayer.displayWin.style.display = 'block'
+        endMessage.style.display = 'block';
+        endMessage.innerHTML = `${currentPlayer.name} Wins`;
         winningTiles.showWin();
+        return;
+    }
+
+    if (boardFull(playingGrid)) {
+        buttonPlayAgain.style.display = 'block'
+        endMessage.style.display = 'block';
+        endMessage.innerHTML = `Nobody Wins`;
+        gridDisabled(true);
         return;
     }
 
     updateCurrentPlayer()
 }
-
 
 
 playingGrid.forEach(row => row.forEach(tile => tile.addEventListener('click', tileChosen)));
@@ -111,7 +120,7 @@ const refreshBoard = () => {
     playingGrid.forEach(row => row.forEach(element => element.innerHTML = ""))
     playingGrid.forEach(row => row.forEach(element => element.style.color = "var(--background-color)"))
     gridDisabled(false);
-    currentPlayer.displayWin.style.display = 'none';
+    endMessage.style.display = 'none';
     buttonPlayAgain.style.display = 'none';
     winningTiles = createWinner();
     updateCurrentPlayer()
